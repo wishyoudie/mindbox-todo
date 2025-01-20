@@ -1,20 +1,28 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-
-type Filter = "all" | "completed" | "uncompleted";
+import { getInitialFilter } from "@/get-initial-filter";
+import { updateURL } from "@/lib/url";
+import { isFilter, type Filter } from "@/types";
 
 export function FilterSwitch({
-  filter,
   setFilter,
 }: {
-  filter: Filter;
   setFilter: (filter: Filter) => void;
 }) {
+  const handleChange = (value: string) => {
+    if (isFilter(value)) {
+      updateURL("filter", value);
+      setFilter(value);
+    } else {
+      console.error("trying to set wrong filter type: ", value);
+    }
+  };
+
   return (
     <div className="mb-4">
       <ToggleGroup
+        defaultValue={getInitialFilter()}
         type="single"
-        value={filter}
-        onValueChange={(value) => setFilter(value as Filter)}
+        onValueChange={handleChange}
       >
         <ToggleGroupItem value="all">all</ToggleGroupItem>
         <ToggleGroupItem value="completed">completed</ToggleGroupItem>

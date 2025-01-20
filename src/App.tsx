@@ -10,18 +10,12 @@ import {
   CardTitle,
 } from "./components/ui/card";
 import { Button } from "./components/ui/button";
-
-type Todo = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
-
-type Filter = "all" | "completed" | "uncompleted";
+import type { Filter, Todo } from "./types";
+import { getInitialFilter } from "./get-initial-filter";
 
 export default function TodoApp() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setFilter] = useState<Filter>("all");
+  const [filter, setFilter] = useState<Filter>(getInitialFilter);
   const hasCompleted = todos.some((todo) => todo.completed);
 
   const addTodo = (text: string) => {
@@ -41,14 +35,10 @@ export default function TodoApp() {
   };
 
   const filteredTodos = todos.filter((todo) => {
-    switch (filter) {
-      case "completed":
-        return todo.completed;
-      case "uncompleted":
-        return !todo.completed;
-      default:
-        return true;
-    }
+    if (filter === "all") return true;
+    if (filter === "completed") return todo.completed;
+    if (filter === "uncompleted") return !todo.completed;
+    return true;
   });
 
   return (
@@ -58,7 +48,7 @@ export default function TodoApp() {
           <CardTitle>todo app</CardTitle>
         </CardHeader>
         <CardDescription className="px-4">
-          <FilterSwitch filter={filter} setFilter={setFilter} />
+          <FilterSwitch setFilter={setFilter} />
         </CardDescription>
         <CardContent>
           <TodoList todos={filteredTodos} toggleTodo={toggleTodo} />

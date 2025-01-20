@@ -1,4 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
+import type { Todo } from "@/types";
 import { CheckCircle2Icon } from "lucide-react";
 
 function Placeholder() {
@@ -12,18 +13,13 @@ function Placeholder() {
   );
 }
 
-type Todo = {
-  id: number;
-  text: string;
-  completed: boolean;
-};
-
-type TodoListProps = {
+export function TodoList({
+  todos,
+  toggleTodo,
+}: {
   todos: Todo[];
   toggleTodo: (id: number) => void;
-};
-
-export function TodoList({ todos, toggleTodo }: TodoListProps) {
+}) {
   const handleCheckedChange = (id: number) => () => {
     toggleTodo(id);
   };
